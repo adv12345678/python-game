@@ -23,6 +23,7 @@ raspberryPosition = [300,300]
 raspberrySpawned = 1
 direction = 'right'
 changeDirection = direction
+previous_len = len(snakeSegments)
 
 def gameOver():
     gameOverFont = pygame.font.Font('freesansbold.ttf', 72)
@@ -31,7 +32,7 @@ def gameOver():
     gameOverRect.midtop = (320, 10)
     playSurface.blit(gameOverSurf, gameOverRect)
     pygame.display.flip()
-    time.sleep(5)
+    time.sleep(2)
     pygame.quit()
     sys.exit()
 
@@ -88,4 +89,5 @@ while True:
     for snakeBody in snakeSegments[1:]:
         if snakePosition[0] == snakeBody[0] and snakePosition[1] == snakeBody[1]:
             gameOver()
-    fpsClock.tick(30)
+    speed = len(snakeSegments)
+    fpsClock.tick(speed)
