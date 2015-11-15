@@ -42,7 +42,7 @@ def get_random_vactor():
 
 background_circle = Circle((100,100,0),(640/2,480/2),480/2)
 point = Circle((255,255,0),(200,200),20)
-speed = 100
+speed = 70
 vector = get_random_vactor()
 print vector
 
@@ -60,27 +60,14 @@ while True:
     dis = sqrt(dis)
 
     if int(dis+point.radius) >= background_circle.radius-4:
-        print "before ->",vector
-        vec_normal = vec
-        vec_normal.normalise()
-        au = vec_normal * vector
-        d = au * vec_normal
-        vector = 2*d - vector
-        vector.normalise()
-        # vector = -vector
-        
-        print "after ->",vector
-        # point.set_position(int(point.position[0]+speed*time_passed_seconds*vector[0]),
-        #                int(point.position[1]+speed*time_passed_seconds*vector[1]))
-        # point.set_position(int(point.position[0]+speed*time_passed_seconds*vector[0]),
-        #                int(point.position[1]+speed*time_passed_seconds*vector[1]))
-        # point.set_position(int(point.position[0]+speed*time_passed_seconds*vector[0]),
-        #                int(point.position[1]+speed*time_passed_seconds*vector[1]))
+        vector = vec
+        vector = -vector.normalise()
 
     point.set_position(int(point.position[0]+speed*time_passed_seconds*vector[0]),
                        int(point.position[1]+speed*time_passed_seconds*vector[1]))
 
     pygame.draw.circle(screen,*background_circle.get_circle())
     pygame.draw.circle(screen,*point.get_circle())
+    pygame.draw.circle(screen,*Circle((200,200,102),(640/2,480/2),2).get_circle())
 
     pygame.display.update()
