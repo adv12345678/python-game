@@ -8,7 +8,7 @@ from pygame.locals import *
 from sys import exit
 from math import sqrt
 from gameobjects.vector2 import *
-from random import uniform
+from random import uniform,randint
 
 class Circle(object):
     def __init__(self,color,position,radius):
@@ -26,7 +26,7 @@ class Circle(object):
 
 class Point(Circle):
     def __init__(self,color,position,radius):
-        self.speed = 100
+        self.speed = 150
         self.vector = get_random_vactor()
         super(Point,self).__init__(color,position,radius)
 
@@ -38,7 +38,7 @@ class Point(Circle):
         return self.vector
 
     def move(self):
-        time_passed = clock.tick(50)
+        time_passed = clock.tick(60)
         time_passed_seconds = time_passed / 1000.0
         self.set_position(int(self.position[0]+
                                self.speed*time_passed_seconds*self.vector[0]),
@@ -82,17 +82,26 @@ def get_random_vactor():
     random_vactor = Vector2(x,y).normalise()
     return random_vactor
 
+def get_random_position():
+    x = randint(100,500)
+    y = randint(0,480)
+    counter = 0
+    while sqrt((background_circle.position[0]-x)**2+
+                       (background_circle.position[1]-y)**2)+20 >= background_circle.radius:
+        y = randint(0,480)
+        counter += 1
+        if counter ==5:
+            y=400
+            break
+    return x,y
+
 def collision():
     pass
 
 def get_point_list(num):
-    x = 100
-    y = 100
     point_list = []
     for _ in range(num):
-        point = Point((255,255,0),(x,y),20)
-        x+=1
-        y+=1
+        point = Point((255,255,0),get_random_position(),20)
         point_list.append(point)
     return point_list
 
@@ -100,25 +109,17 @@ pygame.init()
 screen = pygame.display.set_mode((640, 480), 0, 32)
 clock = pygame.time.Clock()
 background_circle = Circle((69,129,116),(640/2,480/2),480/2)
-point_list = get_point_list(2)
-point = point_list[0]
-point2 = point_list[1]
+point_list = get_point_list(10)
 
 
 while True:
     for event in pygame.event.get():
         if event.type == QUIT:
             exit()
-    # for point in point_list
-    if point.is_bounced():
-        point.bounce()
-    if point2.is_bounced():
-        point2.bounce()
-    point.move()
-    point2.move()
     pygame.draw.circle(screen,*background_circle.get_circle())
-    pygame.draw.circle(screen,*point.get_circle())
-    pygame.draw.circle(screen,*point2.get_circle())
-    pygame.draw.circle(screen,*Circle((200,200,102),(640/2,480/2),2).get_circle()) #center
-
+    for point in point_list:
+        if point.is_bounced():
+            point.bounce()
+        point.move()
+        pygame.draw.circle(screen,*point.get_circle())
     pygame.display.update()
